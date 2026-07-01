@@ -1,139 +1,197 @@
 # CAN-Based Automotive Dashboard using PIC18F4580
 
-A real-time **CAN-Based Automotive Dashboard** implemented in **Embedded C** using the **PIC18F4580** microcontroller. The project simulates communication between multiple Electronic Control Units (ECUs) over the **Controller Area Network (CAN) Bus** to display vehicle parameters such as **Speed, Gear Position, RPM, and Indicator Status** on an LCD dashboard.
+A real-time **CAN-Based Automotive Dashboard** developed in **Embedded C** using **PIC18F4580** microcontrollers.
 
-The system demonstrates how modern automotive ECUs exchange information using message-based communication while ensuring reliable and efficient real-time data transfer.
+The project simulates communication between multiple Electronic Control Units (ECUs) over a **Controller Area Network (CAN Bus)** to monitor and display vehicle parameters such as **Speed, Gear Position, RPM, and Indicator Status** on an LCD dashboard.
+
+The system demonstrates automotive communication principles used in modern vehicles, where different ECUs exchange information over a shared CAN network instead of using dedicated point-to-point wiring.
 
 ---
 
 # Overview
 
-Modern vehicles consist of multiple Electronic Control Units (ECUs), each responsible for specific functionalities such as engine management, transmission control, and dashboard display. These ECUs communicate over the **CAN Bus**, enabling fast and reliable data exchange.
+Modern vehicles contain multiple Electronic Control Units (ECUs) responsible for different functions such as engine control, transmission, dashboard, and body electronics.
 
-This project simulates an automotive dashboard by implementing a multi-node CAN network where sensor data is transmitted between ECUs and displayed on an LCD in real time.
+Instead of connecting every module using separate wires, all ECUs communicate over a **CAN Bus**, making communication faster, reliable, and scalable.
 
-The project demonstrates the use of:
+This project simulates a simplified automotive network consisting of multiple ECUs communicating over CAN Bus.
 
-* Embedded C
+The project demonstrates practical implementation of:
+
+* Embedded C Programming
 * CAN Bus Communication
 * PIC18F4580 Microcontroller
-* ADC (Analog-to-Digital Converter)
+* Multi-ECU Architecture
+* Real-Time Embedded Systems
+* LCD Interface
+* ADC Interface
 * Timer Interrupts
-* LCD Interfacing
-* Matrix Keypad
-* UART
-* Embedded Firmware Development
-* Modular Programming
+* Matrix Keypad Interface
 
 ---
 
 # Features
 
-* Multi-ECU CAN Bus Communication
-* Real-Time Vehicle Data Display
-* Speed Monitoring using ADC
-* Gear Position Selection using Matrix Keypad
+* Multi-ECU CAN Communication
+* Real-Time Dashboard Display
+* Vehicle Speed Monitoring
+* Gear Position Monitoring
 * RPM Monitoring
 * Left & Right Indicator Control
-* LCD Dashboard Display
-* Timer0 Interrupt-based Indicator Blinking
-* Message ID Based CAN Communication
-* Modular Embedded Firmware Design
+* CAN Message ID Based Communication
+* LCD Display Interface
+* ADC-Based Speed Input
+* Matrix Keypad Controlled Gear Selection
+* Timer0 Interrupt Driven Indicator Blinking
+* Modular Embedded C Design
 
 ---
 
-# Project Architecture
+# System Architecture
 
 ```
-                 +----------------------+
-                 |   Speed Sensor (ADC) |
-                 +----------+-----------+
-                            |
-                            ▼
-                  +----------------------+
-                  |       ECU 1          |
-                  |  Speed & Gear Node   |
-                  +----------+-----------+
-                             |
-                             ▼
-                      CAN Bus Network
-                             |
-      --------------------------------------------------------
-      |                                                      |
-      ▼                                                      ▼
-+----------------------+                           +----------------------+
-|       ECU 2          |                           |       ECU 3          |
-|  RPM & Indicator     |                           |    Dashboard ECU     |
-|        Node          |                           +----------------------+
-+----------------------+                                      |
-                                                             ▼
-                                                    +------------------+
-                                                    | 16x2 LCD Display |
-                                                    |------------------|
-                                                    | Speed            |
-                                                    | Gear             |
-                                                    | RPM              |
-                                                    | Indicators       |
-                                                    +------------------+
+                         +----------------------+
+                         |     ECU 1            |
+                         |----------------------|
+                         | Speed Sensor (ADC)   |
+                         | Gear Selection       |
+                         +----------+-----------+
+                                    |
+                                    |
+                              CAN Bus Network
+                                    |
+          ---------------------------------------------------
+          |                                                 |
+          |                                                 |
++---------+---------+                           +-----------+-----------+
+|      ECU 2        |                           |      ECU 3            |
+|-------------------|                           |-----------------------|
+| RPM Generator     |                           | Dashboard Controller  |
+| Indicator Control |                           | LCD Display           |
++---------+---------+                           +-----------+-----------+
+          |                                                 |
+          +---------------- CAN Messages -------------------+
+```
 
 ---
+
+# ECU Responsibilities
+
+## ECU 1
+
+Responsible for
+
+* Reading vehicle speed using ADC
+* Reading gear selection from Matrix Keypad
+* Transmitting Speed over CAN Bus
+* Transmitting Gear Position over CAN Bus
+
+---
+
+## ECU 2
+
+Responsible for
+
+* Generating RPM values
+* Controlling Left Indicator
+* Controlling Right Indicator
+* Transmitting RPM Data
+* Transmitting Indicator Status over CAN Bus
+
+---
+
+## ECU 3 (Dashboard ECU)
+
+Responsible for
+
+* Receiving CAN Frames
+* Identifying CAN Message IDs
+* Processing Vehicle Parameters
+* Displaying Speed
+* Displaying Gear Position
+* Displaying RPM
+* Displaying Indicator Status
+* Timer Interrupt Based Indicator Blinking
+
+---
+
+# Communication Flow
+
 ```
-# System Working
+Vehicle Speed
+      │
+      ▼
+ADC Reading
+      │
+      ▼
+ECU1
+      │
+      ▼
+CAN Bus
+      │
+      ▼
+Dashboard ECU
+      │
+      ▼
+LCD Display
 
 
-Power ON
-    │
-    ▼
-Initialize PIC18F4580
-    │
-    ├── Initialize CAN Module
-    ├── Initialize ADC
-    ├── Initialize LCD
-    ├── Initialize Timer0
-    └── Initialize GPIO
-            │
-            ▼
-Read Speed Sensor (ADC)
-            │
-            ▼
-Read Gear Position (Keypad)
-            │
-            ▼
-Create CAN Frame
-            │
-            ▼
-Assign Message ID
-            │
-            ▼
-Transmit Data on CAN Bus
-            │
-            ▼
-Dashboard ECU Receives Data
-            │
-            ▼
-Identify Message ID
-            │
-            ▼
-Update LCD Display
-            │
-            ▼
-Timer Interrupt Controls Indicators
-            │
-            ▼
-Repeat Continuously
+Gear Selection
+      │
+      ▼
+Matrix Keypad
+      │
+      ▼
+ECU1
+      │
+      ▼
+CAN Bus
+      │
+      ▼
+Dashboard ECU
+
+
+RPM
+      │
+      ▼
+ECU2
+      │
+      ▼
+CAN Bus
+      │
+      ▼
+Dashboard ECU
+
+
+Indicator
+      │
+      ▼
+ECU2
+      │
+      ▼
+CAN Bus
+      │
+      ▼
+Dashboard ECU
+      │
+      ▼
+Timer0 ISR
+      │
+      ▼
+LED Blinking
 ```
 
 ---
 
 # CAN Message IDs
 
-| Message            | ID   |
-| ------------------ | ---- |
-| Speed              | 0x10 |
-| Gear Position      | 0x20 |
-| RPM                | 0x30 |
-| Engine Temperature | 0x40 |
-| Indicator Status   | 0x50 |
+| Parameter                       | Message ID |
+| ------------------------------- | ---------: |
+| Speed                           |       0x10 |
+| Gear                            |       0x20 |
+| RPM                             |       0x30 |
+| Engine Temperature *(Reserved)* |       0x40 |
+| Indicator                       |       0x50 |
 
 ---
 
@@ -143,121 +201,50 @@ Repeat Continuously
 CAN-Based-Automotive-Dashboard/
 │
 ├── ECU1/
-│   ├── ecu1.c
-│   ├── ecu1_sensor.c
 │   ├── adc.c
+│   ├── ecu1_sensor.c
 │   ├── digital_keypad.c
-│
-├── Dashboard_ECU/
-│   ├── main.c
-│   ├── message_handler.c
-│   ├── timer0.c
-│   ├── clcd.c
-│
-├── Common/
 │   ├── can.c
-│   ├── can.h
-│   ├── msg_id.h
-│   ├── uart.c
+│   └── main.c
+│
+├── ECU2/
+│   ├── rpm.c
+│   ├── indicator.c
+│   ├── can.c
+│   └── main.c
+│
+├── ECU3/
+│   ├── main.c
+│   ├── can.c
+│   ├── clcd.c
+│   ├── timer0.c
+│   ├── message_handler.c
+│   └── uart.c
 │
 ├── include/
 │
 ├── screenshots/
 │
-├── documentation/
+├── Documentation/
 │
 ├── README.md
+│
 └── LICENSE
 ```
 
 ---
 
-# Hardware Used
+# Working Principle
 
-* PIC18F4580 Microcontroller
-* CAN Transceiver
-* 16x2 Character LCD
-* Matrix Keypad
-* Potentiometer (Speed Simulation)
-* LEDs (Indicator Simulation)
-* Power Supply
-
----
-
-# Software Used
-
-* MPLAB X IDE
-* XC8 Compiler
-* Embedded C
-* Proteus (Simulation)
-
----
-
-# Firmware Flow
-
-1. Initialize peripherals.
-2. Read speed using ADC.
-3. Read gear using keypad.
-4. Package data into CAN frames.
-5. Assign appropriate CAN Message ID.
-6. Transmit data over CAN Bus.
-7. Dashboard ECU receives CAN frames.
-8. Decode Message ID.
-9. Display Speed, Gear, RPM, and Indicator status.
-10. Timer0 interrupt controls indicator blinking.
-11. Repeat continuously.
-
----
-
-# Build
-
-Compile using **MPLAB X IDE** with the **XC8 Compiler**.
-
----
-
-# Demonstration
-
-Dashboard displays:
-
-```
-SP : 45
-GR : G3
-RPM: 2200
-IND: <--
-```
-
----
-
-# Key Embedded Concepts Demonstrated
-
-* Embedded C Programming
-* CAN Bus Protocol
-* PIC18F4580 Peripheral Programming
-* ADC Configuration
-* Timer0 Interrupts
-* GPIO Programming
-* LCD Interfacing
-* Matrix Keypad Scanning
-* UART Communication
-* Interrupt Service Routine (ISR)
-* Real-Time Embedded Systems
-* Firmware Development
-* Automotive ECU Communication
-
----
-
-# Future Improvements
-
-* CAN FD Support
-* OBD-II Integration
-* TFT LCD Dashboard
-* Fault Diagnostics
-* Watchdog Timer
-* RTOS-based Task Scheduling
-* Data Logging
-* Bluetooth/Wi-Fi Connectivity
-* Vehicle Health Monitoring
-* Automotive Safety Features
+1. System powers ON.
+2. CAN module, LCD, ADC, Timer, and GPIO are initialized.
+3. ECU1 reads Speed and Gear.
+4. ECU2 generates RPM and Indicator Status.
+5. Each ECU sends data using a unique CAN Message ID.
+6. Dashboard ECU continuously receives CAN frames.
+7. Received message IDs determine which parameter is being updated.
+8. LCD displays Speed, Gear, RPM, and Indicator Status.
+9. Timer0 ISR controls LED blinking for indicators.
 
 ---
 
@@ -268,11 +255,66 @@ IND: <--
 * CAN Bus
 * MPLAB X IDE
 * XC8 Compiler
-* UART
 * ADC
-* Timer0
+* UART
+* Matrix Keypad
+* Character LCD
+* Timer0 Interrupt
 * GPIO
+
+---
+
+# Embedded Concepts Demonstrated
+
+* CAN Bus Communication
+* Interrupt Service Routine (ISR)
+* ADC Interfacing
 * LCD Interfacing
+* Matrix Keypad Scanning
+* Timer Configuration
+* GPIO Programming
+* Embedded C Programming
+* Real-Time Communication
+* Firmware Development
+* Modular Programming
+
+---
+
+# Applications
+
+* Automotive Dashboard Systems
+* Vehicle Monitoring Systems
+* CAN-Based Industrial Networks
+* Automotive ECU Communication
+* Embedded System Learning
+* Firmware Development Projects
+
+---
+
+# Future Improvements
+
+* CAN FD Support
+* OBD-II Diagnostics
+* Engine Temperature Monitoring
+* Fuel Level Monitoring
+* TFT Display Interface
+* Fault Detection & Diagnostics
+* Data Logging to SD Card
+* FreeRTOS Integration
+* STM32 Port
+* Automotive Bootloader Support
+
+---
+
+# Development Tools
+
+* MPLAB X IDE
+* XC8 Compiler
+* PIC18F4580 Development Board
+* CAN Bus Module
+* Character LCD
+* Matrix Keypad
+* Potentiometer (Speed Simulation)
 
 ---
 
@@ -282,4 +324,4 @@ IND: <--
 
 Bachelor of Engineering (Electronics & Telecommunication)
 
-**Embedded Systems | Firmware Development | Automotive Embedded Systems | CAN Bus | Embedded C | Microcontrollers**
+Embedded Systems | Firmware Development | Automotive Embedded Systems | CAN Bus | Embedded C | Linux Programming
