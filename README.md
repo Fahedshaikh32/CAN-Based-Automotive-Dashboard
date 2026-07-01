@@ -77,10 +77,10 @@ The project demonstrates the use of:
                                                     +------------------+
 
 ---
-
+```
 # System Working
 
-```
+
 Power ON
     │
     ▼
