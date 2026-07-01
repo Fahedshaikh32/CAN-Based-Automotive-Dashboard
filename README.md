@@ -1,5 +1,3 @@
----
-
 # CAN-Based Automotive Dashboard using PIC18F4580
 
 A real-time **CAN-Based Automotive Dashboard** implemented in **Embedded C** using the **PIC18F4580** microcontroller. The project simulates communication between multiple Electronic Control Units (ECUs) over the **Controller Area Network (CAN) Bus** to display vehicle parameters such as **Speed, Gear Position, RPM, and Indicator Status** on an LCD dashboard.
