@@ -190,7 +190,7 @@ CAN-Based-Automotive-Dashboard/
 │   └── uart.c / uart.h
 │
 ├── Images/                  # Block/circuit diagrams and hardware photos
-├── Videos/                  # Demo.mp4 — full system demonstration
+├── Videos/                  # Demo.mp4 And The_Architecture_Shift__Engineering_a_CAN-Based_Dashboard.mp4 — full system demonstration
 ├── .gitignore
 ├── LICENSE                  # MIT License
 └── README.md
